@@ -1,0 +1,9 @@
+{
+  "name": "site_stats",
+  "description": "A backend for showing MPI stats",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "3.4.4"
+  }
+}
