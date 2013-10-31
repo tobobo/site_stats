@@ -2,8 +2,8 @@ async = require("async")
 exec = require("child_process").exec
 
 exports.index = (request, response) ->
-  site_mpi_root = '/home/tobobo/site_mpi/'
-  #site_mpi_root = '../site_mpi/'
+  #site_mpi_root = '/home/tobobo/site_mpi/'
+  site_mpi_root = './site_mpi/'
 
   response.setHeader "Content-Type", "application/json"
   response.setHeader "Access-Control-Allow-Origin", "*"
@@ -32,7 +32,7 @@ exports.index = (request, response) ->
 
       unmerged_branches: (callback) ->
         exec "sh -c 'cd #{site_mpi_root} && git branch -r --no-merged origin/master'", (error, stdout, stderr) ->
-          callback null, stdout.split().map (s) -> s.trim()
+          callback null, stdout.split('\n').map (s) -> s.trim()
 
       js_log_lines: (callback) ->
         exec "grep -r console.log #{site_mpi_root}app/assets/javascripts | wc -l", (error, stdout, stderr) ->
@@ -48,10 +48,9 @@ exports.index = (request, response) ->
           test: (callback) ->
             async.parallel lang_functions.test, (err, results) ->
               callback null, results
+
         ), (err, results) ->
           callback(null, results)
-
-      
 
     ), (err, results) ->
       response.write JSON.stringify(results)
