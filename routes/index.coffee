@@ -37,10 +37,16 @@ exports.index = (request, response) ->
     # run the rest of the commands simultaneously
     async.parallel (
 
+      # get build status
+      build_succeeds: (callback) ->
+        sys.puts('getting build status...')
+        codeship_status = 'https://www.codeship.io/projects/af505270-2251-0131-ff05-721bb8e4003d/status'
+        exec "curl -I #{codeship_status}", (error, stdout, stderr) ->
+          callback null, stdout.indexOf('status_success') > 0
+
       # get unmerged branches
       unmerged_branches: (callback) ->
         exec "sh -c 'cd #{site_mpi_root} && git branch -r --no-merged origin/master'", (error, stdout, stderr) ->
-          sys.puts stdout
           branches = stdout.split('\n').map((s) -> s.trim()).filter((s) -> s != "").map (branch_ref) ->
             branch_ref_parts = branch_ref.split('/')
 
