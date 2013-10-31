@@ -29,18 +29,25 @@ exports.index = (request, response) ->
 
     async.parallel (
 
-      log_lines: (callback) ->
-        exec "grep -Fir console.log #{site_mpi_root}app/assets/javascripts | wc -l", (error, stdout, stderr) ->
-          callback null, stdout.trim()
+      js_log_lines: (callback) ->
+        exec "grep -r console.log #{site_mpi_root}app/assets/javascripts | wc -l", (error, stdout, stderr) ->
+          callback null, parseInt(stdout.trim())
 
-      app: (callback) ->
-        async.parallel lang_functions.app, (err, results) ->
-          callback null, results
+      total_lines_of_code: (callback) ->
+        async.parallel (
 
-      test: (callback) ->
-        async.parallel lang_functions.test, (err, results) ->
-          callback null, results
+          app: (callback) ->
+            async.parallel lang_functions.app, (err, results) ->
+              callback null, results
+
+          test: (callback) ->
+            async.parallel lang_functions.test, (err, results) ->
+              callback null, results
+        ), (err, results) ->
+          callback(null, results)
+
+      
 
     ), (err, results) ->
-      response.write JSON.stringify(lines_of_code: results)
+      response.write JSON.stringify(results)
       response.end()
