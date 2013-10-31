@@ -25,10 +25,14 @@ exports.index = (request, response) ->
   for language in test_langs
     lang_functions.test[language] = create_lang_function 'test', language
 
-  git_pull_command = "sh -c 'cd #{site_mpi_root} && git pull'"
+  git_pull_command = "sh -c 'cd #{site_mpi_root} && git fetch -a && git pull '"
   exec git_pull_command, (error, stdout, stderr) ->
 
     async.parallel (
+
+      unmerged_branches: (callback) ->
+        exec "sh -c 'cd #{site_mpi_root} && git branch -r --no-merged origin/master'", (error, stdout, stderr) ->
+          callback null, stdout.split().map (s) -> s.trim()
 
       js_log_lines: (callback) ->
         exec "grep -r console.log #{site_mpi_root}app/assets/javascripts | wc -l", (error, stdout, stderr) ->
