@@ -6,6 +6,8 @@ exec = require("child_process").exec
 child = undefined
 app = express()
 
+var site_mpi_root = '/home/tobobo/site_mpi/'
+
 app.get "/*", (request, response) ->
 
   response.setHeader "Content-Type", "application/json"
@@ -17,7 +19,7 @@ app.get "/*", (request, response) ->
 
   create_lang_function = (folder, language) ->
     (callback) ->
-      cmd = "find ../site_mpi/app -type f -name '*.#{language}' -exec awk 'END {print NR}' '{}' + 2>/dev/null | awk '{ total+=$1 }END{print total}'"
+      cmd = "find #{site_mpi_root}#{folder} -type f -name '*.#{language}' -exec awk 'END {print NR}' '{}' + 2>/dev/null | awk '{ total+=$1 }END{print total}'"
       exec cmd, (error, stdout, stderr) ->
         callback null, parseInt(stdout.trim())
 
