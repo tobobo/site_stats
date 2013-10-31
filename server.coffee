@@ -27,7 +27,7 @@ app.get "/*", (request, response) ->
     lang_functions.app[language] = create_lang_function 'app', language
 
   for language in test_langs
-    lang_functions.test[language] = lang_functions.app[language] = create_lang_function 'test', language
+    lang_functions.test[language] = create_lang_function 'test', language
 
   async.parallel (
     app: (callback) ->
