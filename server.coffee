@@ -6,7 +6,7 @@ exec = require("child_process").exec
 child = undefined
 app = express()
 
-var site_mpi_root = '/home/tobobo/site_mpi/'
+site_mpi_root = '/home/tobobo/site_mpi/'
 
 app.get "/*", (request, response) ->
 
