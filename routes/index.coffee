@@ -25,7 +25,7 @@ exports.index = (request, response) ->
   for language in test_langs
     lang_functions.test[language] = create_lang_function 'test', language
 
-  git_pull_command = "sh -c 'cd #{site_mpi_root} && git fetch -a && git pull '"
+  git_pull_command = "sh -c 'cd #{site_mpi_root} && git fetch --all && git pull '"
   exec git_pull_command, (error, stdout, stderr) ->
 
     async.parallel (
