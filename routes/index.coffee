@@ -6,7 +6,8 @@ exports.index = (request, response) ->
   #site_mpi_root = '../site_mpi/'
 
   response.setHeader "Content-Type", "application/json"
-
+  response.setHeader "Access-Control-Allow-Origin", "*"
+  
   app_langs = ["rb", "coffee", "hbs"]
   test_langs = ["rb", "coffee"]
 
