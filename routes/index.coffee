@@ -30,7 +30,7 @@ exports.index = (request, response) ->
     lang_functions.test[language] = create_lang_function 'test', language
 
   # fetch and pull before doing anything
-  git_pull_command = "sh -c 'cd #{site_mpi_root} && git fetch --all && git pull '"
+  git_pull_command = "sh -c 'cd #{site_mpi_root} && git fetch --all && git remote prune `git remote` && git pull '"
   exec git_pull_command, (error, stdout, stderr) ->
 
     # run the rest of the commands simultaneously
@@ -38,7 +38,7 @@ exports.index = (request, response) ->
 
       # get unmerged branches
       unmerged_branches: (callback) ->
-        exec "sh -c 'cd #{site_mpi_root} && git remote prune --all && git branch -r --no-merged origin/master'", (error, stdout, stderr) ->
+        exec "sh -c 'cd #{site_mpi_root} && git branch -r --no-merged origin/master'", (error, stdout, stderr) ->
           callback null, stdout.split('\n').map((s) -> s.trim()).filter (s) -> s != ""
 
       # get number of log lines 
