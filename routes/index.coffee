@@ -26,7 +26,12 @@ exports.index = (request, response) ->
 
   git_pull_command = "sh -c 'cd #{site_mpi_root} && git pull'"
   exec git_pull_command, (error, stdout, stderr) ->
+
     async.parallel (
+
+      log_lines: (callback) ->
+        exec "grep -Fir console.log #{site_mpi_root}app/assets/javascripts | wc -l", (error, stdout, stderr) ->
+          callback null, stdout.trim()
 
       app: (callback) ->
         async.parallel lang_functions.app, (err, results) ->
