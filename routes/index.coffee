@@ -46,12 +46,12 @@ exports.index = (request, response) ->
 
             remote: branch_ref_parts[0]
             branch: branch_ref_parts[1]
-              
+
           callback null, branches
 
       # get number of log lines 
       js_log_lines: (callback) ->
-        exec "grep -r console.log #{site_mpi_root}app/assets/javascripts | wc -l", (error, stdout, stderr) ->
+        exec "egrep -r 'console.log|{{log' #{site_mpi_root}app/assets/javascripts | wc -l", (error, stdout, stderr) ->
           callback null, parseInt(stdout.trim())
 
       # get lines of code for different languages. how exciting nesting can be!
