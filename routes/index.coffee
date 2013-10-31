@@ -32,7 +32,7 @@ exports.index = (request, response) ->
 
       unmerged_branches: (callback) ->
         exec "sh -c 'cd #{site_mpi_root} && git branch -r --no-merged origin/master'", (error, stdout, stderr) ->
-          callback null, stdout.split('\n').map (s) -> s.trim()
+          callback null, stdout.split('\n').map((s) -> s.trim()).filter (s) -> s != ""
 
       js_log_lines: (callback) ->
         exec "grep -r console.log #{site_mpi_root}app/assets/javascripts | wc -l", (error, stdout, stderr) ->
