@@ -1,4 +1,5 @@
 async = require("async")
+sys = require("sys")
 exec = require("child_process").exec
 
 exports.index = (request, response) ->
@@ -39,7 +40,14 @@ exports.index = (request, response) ->
       # get unmerged branches
       unmerged_branches: (callback) ->
         exec "sh -c 'cd #{site_mpi_root} && git branch -r --no-merged origin/master'", (error, stdout, stderr) ->
-          callback null, stdout.split('\n').map((s) -> s.trim()).filter (s) -> s != ""
+          sys.puts stdout
+          branches = stdout.split('\n').map((s) -> s.trim()).filter((s) -> s != "").map (branch_ref) ->
+            branch_ref_parts = branch_ref.split('/')
+
+            remote: branch_ref_parts[0]
+            branch: branch_ref_parts[1]
+              
+          callback null, branches
 
       # get number of log lines 
       js_log_lines: (callback) ->
