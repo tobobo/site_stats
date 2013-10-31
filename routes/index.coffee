@@ -2,15 +2,19 @@ async = require("async")
 exec = require("child_process").exec
 
 exports.index = (request, response) ->
+  # specify the root of the site_mpi repo - probably shouldn't be a repo you actually use
   #site_mpi_root = '/home/tobobo/site_mpi/'
   site_mpi_root = './site_mpi/'
 
+  # set headers to json and allow access to all
   response.setHeader "Content-Type", "application/json"
   response.setHeader "Access-Control-Allow-Origin", "*"
   
+  # extensions to look for in the app directory
   app_langs = ["rb", "coffee", "hbs"]
   test_langs = ["rb", "coffee"]
 
+  # create functions with callbacks that find number of files of a given language
   lang_functions = {app: {}, test: {}}
 
   create_lang_function = (folder, language) ->
@@ -25,19 +29,24 @@ exports.index = (request, response) ->
   for language in test_langs
     lang_functions.test[language] = create_lang_function 'test', language
 
+  # fetch and pull before doing anything
   git_pull_command = "sh -c 'cd #{site_mpi_root} && git fetch --all && git pull '"
   exec git_pull_command, (error, stdout, stderr) ->
 
+    # run the rest of the commands simultaneously
     async.parallel (
 
+      # get unmerged branches
       unmerged_branches: (callback) ->
         exec "sh -c 'cd #{site_mpi_root} && git branch -r --no-merged origin/master'", (error, stdout, stderr) ->
           callback null, stdout.split('\n').map((s) -> s.trim()).filter (s) -> s != ""
 
+      # get number of log lines 
       js_log_lines: (callback) ->
         exec "grep -r console.log #{site_mpi_root}app/assets/javascripts | wc -l", (error, stdout, stderr) ->
           callback null, parseInt(stdout.trim())
 
+      # get lines of code for different languages. how exciting nesting can be!
       total_lines_of_code: (callback) ->
         async.parallel (
 
