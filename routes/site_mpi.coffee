@@ -5,6 +5,7 @@ exec = require("child_process").exec
 SiteStats = require("../utils/schema.coffee").SiteStats
 
 exports.web  = (request, response) ->
+  console.log('very first thing!!')
   # set headers to json and allow access to all
   response.setHeader "Content-Type", "application/json"
   response.setHeader "Access-Control-Allow-Origin", "*"
