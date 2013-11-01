@@ -10,15 +10,15 @@ exports.web  = (request, response) ->
   response.setHeader "Access-Control-Allow-Origin", "*"
   
   # connect to db
-  sys.puts('connecting to db...')
+  console.log('connecting to db...')
   mongoose.connect "mongodb://localhost/site_stats", (callback) ->
-    sys.puts('connected to db. finding record...')
+    console.log('connected to db. finding record...')
     async.parallel (
 
       # get site stats from db
       site_stats: (callback) ->
         SiteStats.findOne {codebase: 'site_mpi'}, (err, these_site_stats) ->
-          sys.puts('found record. serving.')
+          console.log('found record. serving.')
           mongoose.disconnect()
           callback(null, these_site_stats)
 
