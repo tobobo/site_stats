@@ -24,12 +24,16 @@ exports.web  = (request, response) ->
 
       # get last 3 github events from github
       github_events: (callback) ->
-        exec "curl -u tobias@myproject.is:#{process.env.GITHUB_TOKEN} https://api.github.com/repos/scoutai/site_mpi/events", (error, stdout, stderr) ->
+        cmd = "curl -u tobias@myproject.is:#{process.env.GITHUB_TOKEN} https://api.github.com/repos/scoutai/site_mpi/events"
+        console.log 'github command', cmd
+        exec cmd, (error, stdout, stderr) ->
           callback null, JSON.parse(stdout).slice(0, 3)
 
       # get in-progress sprint.ly stories
       sprintly_stories: (callback) ->
-        exec "curl -u tobias@Myproject.is:#{process.env.SPRINTLY_TOKEN} 'https://sprint.ly/api/products/15543/items.json?status=in-progress'", (error, stdout, stderr) ->
+        cmd = "curl -u tobias@Myproject.is:#{process.env.SPRINTLY_TOKEN} 'https://sprint.ly/api/products/15543/items.json?status=in-progress'"
+        consold.log 'sprintly command', cmd
+        exec cmd, (error, stdout, stderr) ->
           data = JSON.parse(stdout)
           data = data.map (s) ->
             status: s.status
