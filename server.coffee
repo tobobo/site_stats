@@ -1,6 +1,8 @@
 express = require("express")
 sys = require("sys")
 app = express()
+routes = 
+  site_mpi: require('./routes/site_mpi.coffee').web
 
 # workers
 require('./workers/site_mpi.coffee').work()
@@ -11,6 +13,7 @@ app.get "/", (request, response) ->
   response.write 'nothing to see here'
   response.end()
 
-app.get "/site_mpi.json", require('./routes/site_mpi.coffee').web
+console.log routes.site_mpi
+app.get "/site_mpi.json", routes.site_mpi
 
 app.listen 8888
