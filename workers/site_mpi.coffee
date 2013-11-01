@@ -16,7 +16,7 @@ exports.work = ->
   # time to look at the code!
 
   # extensions to look for in the app directory
-  app_langs = ["rb", "coffee", "hbs"]
+  app_langs = ["rb", "coffee", "hbs", "scss"]
   test_langs = ["rb", "coffee"]
 
   # create functions with callbacks that find number of files of a given language
