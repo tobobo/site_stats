@@ -2,23 +2,15 @@ async = require("async")
 sys = require("sys")
 exec = require("child_process").exec
 mongoose = require("mongoose")
+SiteStats = require("../utils/schema.coffee").SiteStats
 
-site_stats_schema = mongoose.Schema
-  codebase: String
-  build_succeeds: Boolean
-  unmerged_branches: [{remote: String, branch: String}]
-  js_log_lines: Number
-  total_lines_of_code: Object
-
-SiteStats = mongoose.model('SiteStats', site_stats_schema)
-
-exports.worker = ->
+exports.work = ->
   # specify the root of the site mpi repo - shouldn't be a repo you actually use
   # site_mpi_root = '/home/tobobo/site_mpi/'
   site_mpi_root = './site_mpi/'
 
   # specify how frequently the code stats are updated
-  poll_time = 45000
+  poll_time = 15000
   
 
   # time to look at the code!
@@ -99,19 +91,9 @@ exports.worker = ->
           these_site_stats.save (err, these_site_stats) ->
             sys.puts (new Date).toString(), 'saved stats'
             mongoose.disconnect()
-            setTimeout exports.worker, poll_time
+            setTimeout exports.work, poll_time
 
 
-exports.web  = (request, response) ->
-  # set headers to json and allow access to all
-  response.setHeader "Content-Type", "application/json"
-  response.setHeader "Access-Control-Allow-Origin", "*"
-  
-  # connect to db
-  mongoose.connect "mongodb://localhost/site_stats", (callback) ->
-    SiteStats.findOne {codebase: 'site_mpi'}, (err, these_site_stats) ->
-      response.write(JSON.stringify(these_site_stats))
-      response.end()
-      mongoose.disconnect()
+
   
   
