@@ -8,8 +8,11 @@ exports.web  = (request, response) ->
   response.setHeader "Access-Control-Allow-Origin", "*"
   
   # connect to db
+  sys.puts('connecting to db...')
   mongoose.connect "mongodb://localhost/site_stats", (callback) ->
+    sys.puts('connected to db. finding record...')
     SiteStats.findOne {codebase: 'site_mpi'}, (err, these_site_stats) ->
+      sys.puts('found record. serving.')
       response.write(JSON.stringify(these_site_stats))
-      response.end()
       mongoose.disconnect()
+      response.end()
