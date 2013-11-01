@@ -16,6 +16,17 @@ exports.web  = (request, response) ->
     console.log('connected to db. finding record...')
     async.parallel (
 
+      # get build status
+      build_status: (callback) ->
+        codeship_status_image = 'https://www.codeship.io/projects/af505270-2251-0131-ff05-721bb8e4003d/status'
+        exec "curl -I #{codeship_status_image}", (error, stdout, stderr) ->
+          if stdout.indexOf('status_success') > 0
+            callback null, 'success'
+          else if stdout.indexOf('status_testing') > 0
+            callback null, 'test'
+          else
+            callback null, 'fail'
+
       # get site stats from db
       site_stats: (callback) ->
         SiteStats.findOne {codebase: 'site_mpi'}, (err, these_site_stats) ->

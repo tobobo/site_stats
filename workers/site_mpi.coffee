@@ -41,12 +41,6 @@ exports.work = ->
     # run the rest of the commands simultaneously
     async.parallel (
 
-      # get build status
-      build_succeeds: (callback) ->
-        codeship_status_image = 'https://www.codeship.io/projects/af505270-2251-0131-ff05-721bb8e4003d/status'
-        exec "curl -I #{codeship_status_image}", (error, stdout, stderr) ->
-          callback null, stdout.indexOf('status_success') > 0
-
       # get unmerged branches
       unmerged_branches: (callback) ->
         exec "sh -c 'cd #{site_mpi_root} && git branch -r --no-merged origin/master'", (error, stdout, stderr) ->
