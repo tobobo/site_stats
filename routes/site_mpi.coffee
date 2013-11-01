@@ -32,7 +32,7 @@ exports.web  = (request, response) ->
       # get in-progress sprint.ly stories
       sprintly_stories: (callback) ->
         cmd = "curl -u tobias@Myproject.is:#{process.env.SPRINTLY_TOKEN} 'https://sprint.ly/api/products/15543/items.json?status=in-progress'"
-        consold.log 'sprintly command', cmd
+        console.log 'sprintly command', cmd
         exec cmd, (error, stdout, stderr) ->
           data = JSON.parse(stdout)
           data = data.map (s) ->
