@@ -30,7 +30,14 @@ exports.web  = (request, response) ->
       # get in-progress sprint.ly stories
       sprintly_stories: (callback) ->
         exec "curl -u tobias@Myproject.is:#{process.env.SPRINTLY_TOKEN} 'https://sprint.ly/api/products/15543/items.json\?status\=in-progress'", (error, stdout, stderr) ->
-          callback null, JSON.parse(stdout)
+          data = JSON.parse(stdout)
+          data = data.map (s) ->
+            status: s.status
+            assigned_to: 
+              name: s.assigned_to.first_name
+              email: s.assigned_to.email
+            type: s.type
+          callback null, data
 
     # pack it up and send it back
     ), (err, results) ->
