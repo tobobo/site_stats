@@ -27,6 +27,11 @@ exports.web  = (request, response) ->
         exec "curl -H 'Authorization: token #{process.env.GITHUB_TOKEN}' https://api.github.com/repos/scoutai/site_mpi/events", (error, stdout, stderr) ->
           callback null, JSON.parse(stdout).slice(0, 3)
 
+      # get in-progress sprint.ly stories
+      sprintly_stories: (callback) ->
+        exec "curl -u tobias@Myproject.is:#{process.env.SPRINTLY_TOKEN} 'https://sprint.ly/api/products/15543/items.json\?status\=in-progress'", (error, stdout, stderr) ->
+          callback null, JSON.parse(stdout)
+
     # pack it up and send it back
     ), (err, results) ->
       response.write(JSON.stringify(results))
