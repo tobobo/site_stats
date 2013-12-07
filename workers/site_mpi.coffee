@@ -52,6 +52,10 @@ exports.work = ->
 
           callback null, branches
 
+      num_staging_commits: (callback) ->
+        exec "sh -c 'cd #{site_mpi_root} && git log origin/master..origin/staging | grep '^commit' |  wc -l", (error, stdout, stderr) ->
+          callback null, stdout
+
       # get number of log lines 
       js_log_lines: (callback) ->
         exec "egrep -r 'console.log|{{log' #{site_mpi_root}app/assets/javascripts | wc -l", (error, stdout, stderr) ->
